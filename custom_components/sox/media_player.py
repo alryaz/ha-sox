@@ -40,15 +40,18 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-def setup_platform(hass, config, add_entities, discover_info):
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None) -> bool:
     """Set up the SoX platform."""
-    del discover_info
     host = config.get(CONF_HOST)
     port = config.get(CONF_PORT)
     name = config.get(CONF_NAME)
 
+    _LOGGER.info("Setting up SoX endpoint '%s': %s:%s", name, host, port)
+
     device = SoXDevice(hass, host, port, name)
-    add_entities([device], True)
+    async_add_entities([device], True)
+
+    return True
 
 
 class SoXDevice(MediaPlayerEntity):
